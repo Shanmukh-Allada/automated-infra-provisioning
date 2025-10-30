@@ -39,6 +39,10 @@ resource "aws_instance" "demo" {
   associate_public_ip_address = true
  
   tags = {
-    Name = "Prod${count.index + 1}"
+    Name = "NainA${count.index + 1}"
   }
+}
+
+output "instance_ips" {
+  value = aws_instance.demo[*].public_ip
 }
