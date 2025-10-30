@@ -38,7 +38,7 @@ resource "aws_instance" "demo" {
   associate_public_ip_address = true
  
   tags = {
-    Name = "NainA${count.index + 1}"
+    Name = "Devil${count.index + 1}"
   }
 }
 
