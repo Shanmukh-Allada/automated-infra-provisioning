@@ -10,7 +10,6 @@ terraform {
 provider "aws" {
   region = "us-east-1"
 }
- 
 resource "aws_security_group" "demo_sg" {
   name        = "demo-sg"
   description = "Allow SSH access"
