@@ -1,0 +1,16 @@
+- name: Install packages on EC2
+  hosts: ec2
+  become: yes
+  tasks:
+    - name: Install packages
+      yum:
+        name: "*"
+        state: latest
+
+    - name: Install vim, curl, git packages
+      yum:
+        name:
+          - vim
+          - curl
+          - git
+        state: present
