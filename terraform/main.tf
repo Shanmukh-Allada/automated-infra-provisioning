@@ -38,7 +38,7 @@ resource "aws_instance" "demo" {
   associate_public_ip_address = true
  
   tags = {
-    Name = "move${count.index + 1}"
+    Name = "movies${count.index + 1}"
   }
 }
 
