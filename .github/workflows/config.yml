@@ -1,0 +1,44 @@
+name: Configure EC2 with Ansible
+
+on:
+  workflow_dispatch:  # Manual trigger for now
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install Ansible
+      run: |
+        python -m pip install --upgrade pip
+        pip install ansible
+
+    - name: Add SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+
+    - name: Generate dynamic inventory from Terraform output
+      run: |
+        terraform -chdir=terraform output -json instance_ips > ec2_ips.json
+        echo "[ec2]" > ansible/hosts.ini
+        jq -r '.value[]' ec2_ips.json | while read ip; do
+          echo "$ip ansible_user=redhat" >> ansible/hosts.ini
+        done
+
+    - name: Run Ansible Playbook
+      env:
+        ANSIBLE_HOST_KEY_CHECKING: False
+      run: |
+        ansible-playbook ansible/install_updates.yml \
+          -i ansible/hosts.ini \
+          --private-key ~/.ssh/id_rsa

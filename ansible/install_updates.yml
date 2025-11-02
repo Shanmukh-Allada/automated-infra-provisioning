@@ -1,13 +1,9 @@
-- name: Install packages on EC2
-  hosts: ec2
+- name: Install essential packages on Red Hat EC2
+  hosts: all
   become: yes
-  tasks:
-    - name: Install packages
-      yum:
-        name: "*"
-        state: latest
 
-    - name: Install vim, curl, git packages
+  tasks:
+    - name: Install vim, curl, and git
       yum:
         name:
           - vim
